@@ -56,7 +56,7 @@
       ************************* -->
       <div ng-if="cards.active">
         <td-cards>
-          <td-card ng-repeat="card in cards.active" before-show="sayHello()" on-destroy="cardDestroyed($index)" on-transition-left="cardSwipedLeft($index)" on-transition-right="cardSwipedRight($index)">
+          <td-card ng-repeat="card in cards.active" before-show="sayHello()" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)">
             <div class="image" ng-controller="CardCtrl">
               <div class="no-text"><i class="icon ion-thumbsdown"></i></div>
               <div class="yes-text"><i class="icon ion-thumbsup"></i></div>
@@ -76,7 +76,7 @@
             - 'refreshCards()' reloads all cards that have NOT been discarded.
           ************************* -->
           <td-card id="end-card" drag="false">
-            <i class="icon ion-ios-refresh disable-user-behavior" ng-click="refreshCards()"></i>
+            <i class="icon ion-ios-refresh" ng-click="refreshCards()"></i>
           </td-card>
         </td-cards>
       </div>
