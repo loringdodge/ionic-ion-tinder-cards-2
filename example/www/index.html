@@ -1,54 +1,83 @@
-<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title>Ionic Seed App</title>
 
-    <!-- ionic css -->
-    <link href="lib/css/ionic.css" rel="stylesheet">
+    <title>Ionic Tinder 2</title>
 
-    <!-- your app's css -->
-    <link href="css/app.css" rel="stylesheet">
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
-    <!-- angularjs scripts -->
-    <script src="lib/js/ionic.bundle.js"></script>
+    <!-- tdcards css -->
+    <link rel="stylesheet" href="css/ionic.tdcards.css">
 
-    <!-- cordova script -->
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <script src="lib/collide/collide.js"></script>
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- tdcards js -->
+    <script src="js/ionic.tdcards.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
-    <!-- your app's script -->
+    <!-- app js -->
     <script src="js/app.js"></script>
-    <script src="js/ionic.swipecards.js"></script>
-    <script src="js/services.js"></script>
-    <script src="js/controllers.js"></script>
-  </head>
 
-  <!-- 
-    'starter' is the name of this angular module (js/app.js)
-  -->
-  <body ng-app="starter" animation="slide-left-right-ios7" no-scroll>
-    <ion-pane ng-controller="CardsCtrl">
-      <ion-header-bar class="bar-transparent">
-        <h1 class="title">Tinder Cards</h1>
+  </head>
+  <body ng-app="starter" no-scroll>
+    <ion-pane ng-controller="CardsCtrl" class="background-grey">
+      <ion-header-bar class="bar-default">
+        <h1 class="title">TD Cards 2</h1>
       </ion-header-bar>
 
-      <tinder-cards>
-        <tinder-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-card-swipe="cardSwiped($index)">
-          <div ng-controller="CardCtrl">
-            <div class="card">
-              <div class="card-body">
-                <div class="image">
-                  <img ng-src="{{card.image}}">
-                </div>
-                <div class="card-footer">
-                  <button class="button button-clear button-positive" ng-click="goAway()">Answer</button>
-                  <button class="button button-clear button-positive" ng-click="goAway()">Decline</button>
-                </div>
-              </div>
-          </div>
-        </tinder-card>
-      </tinder-cards>
+      <div class="row td-title">
+        <div class="col">Master: <span>{{ cards.master.length }}</span></div>
+        <div class="col">Cards: <span>{{ cards.active.length }}</span></div>
+        <div class="col">Discards: <span>{{ cards.discards.length }}</span></div>
+        <div class="col">Liked: <span>{{ cards.liked.length }}</span></div>
+        <div class="col">Disliked: <span>{{ cards.disliked.length }}</span></div>
+      </div>
+
+
+      <!-- *************************
+        TD Cards
+        - We start off with an ng-if so that the cards are not generated
+          unless $scope.cards is not 'null'
+      ************************* -->
+      <div ng-if="cards.active">
+        <td-cards>
+          <td-card ng-repeat="card in cards.active" before-show="sayHello()" on-destroy="cardDestroyed($index)" on-transition-left="cardSwipedLeft($index)" on-transition-right="cardSwipedRight($index)">
+            <div class="image" ng-controller="CardCtrl">
+              <div class="no-text"><i class="icon ion-thumbsdown"></i></div>
+              <div class="yes-text"><i class="icon ion-thumbsup"></i></div>
+              <!-- *************************
+                Discard
+                - The card is removed from the deck and a fly away animation is triggered.
+                - onClickTransitionOut is found in ionic.tdcards.js
+                - Animation can be customized by changing defaults
+              ************************* -->
+              <div class="discard" ng-click="onClickTransitionOut(card)">DISCARD</div>
+              <img ng-src="{{ card.image }}">
+            </div>
+          </td-card>
+          <!-- *************************
+            End Card
+            - 'drag' is set to false. The user cannot drag it.
+            - 'refreshCards()' reloads all cards that have NOT been discarded.
+          ************************* -->
+          <td-card id="end-card" drag="false">
+            <i class="icon ion-ios-refresh disable-user-behavior" ng-click="refreshCards()"></i>
+          </td-card>
+        </td-cards>
+      </div>
+
     </ion-pane>
   </body>
 </html>
+

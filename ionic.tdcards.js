@@ -111,12 +111,12 @@
     },
 
     /**
-     * Swipe a card out programtically
+     * Swipe a card out programatically
      */
     swipe: function() {
       this.transitionOut();
     },
-    
+
     /**
      * Snap the card back to its original position
      */
@@ -128,37 +128,61 @@
       //return true;
       return Math.abs(this.thresholdAmount) < 0.4;
     },
+
     /**
-     * Fly the card out or animate back into resting position.
-     */
-    transitionOut: function(e) {
+     * Animation to fly the card away
+    */
+    animateFlyAway: function(e) {
+      // is animation triggered by drag or click?
+      var draggable = (e !== undefined);
+
       var self = this;
 
-      if(this.isUnderThreshold()) {
-        self.onSnapBack(this.x, this.y, this.rotationAngle);
-        return;
+      self.onTransitionOut(self.thresholdAmount);
+
+      // defaults for animation triggered by click
+      var defaults = {
+        thresholdAmount: 0,
+        rotationAngle: -0.5,
+        deltaX: -400,
+        deltaY: 400,
+        velocityX: 0.1,
+        targetX: -500,
+        targetY: -500,
+        duration: 5
       }
 
-      self.onTransitionOut(self.thresholdAmount);
-      
-      var angle = Math.atan(e.gesture.deltaX / e.gesture.deltaY);
+      this.rotationAngle = this.rotationAngle || defaults.rotationAngle;
+      this.thresholdAmount = this.thresholdAmount || defaults.thresholdAmount;
 
-      var dir = this.thresholdAmount < 0 ? -1 : 1;
+      var deltaX = (draggable) ? e.gesture.deltaX : defaults.deltaX;
+      var deltaY = (draggable) ? e.gesture.deltaY : defaults.deltaY;
+
+      var angle = Math.atan(deltaX / deltaY);
+
+      // var dir = this.thresholdAmount < 0 ? -1 : 1;
       var targetX;
-      if(this.x > 0) {
-        targetX = (this.parentWidth / 2) + (this.width);
+      if(draggable) {
+        targetX = (this.x > 0) ? (this.parentWidth / 2) + (this.width) : - (this.parentWidth + this.width);
       } else {
-        targetX = - (this.parentWidth + this.width);
+        targetX = defaults.targetX;
       }
 
       // Target Y is just the "opposite" side of the triangle of targetX as the adjacent edge (sohcahtoa yo)
-      var targetY = targetX / Math.tan(angle);
+      var targetY;
+      if(draggable) {
+        targetY = targetX / Math.tan(angle);
+      } else {
+        targetY = defaults.targetY;
+      }
 
       // Fly out
       var rotateTo = this.rotationAngle;//(this.rotationAngle this.rotationDirection * 0.2));// || (Math.random() * 0.4);
 
-      var duration = 0.3 - Math.min(Math.max(Math.abs(e.gesture.velocityX)/10, 0.05), 0.2);
-      
+      var velocityX = (draggable) ? e.gesture.velocityX : defaults.velocityX;
+
+      var duration = 0.3 - Math.min(Math.max(Math.abs(velocityX)/10, 0.05), 0.2);
+
       ionic.requestAnimationFrame(function() {
         self.el.style.transform = self.el.style.webkitTransform = 'translate3d(' + targetX + 'px, ' + targetY + 'px,0) rotate(' + self.rotationAngle + 'rad)';
         self.el.style.transition = self.el.style.webkitTransition = 'all ' + duration + 's ease-in-out';
@@ -170,8 +194,23 @@
       setTimeout(function() {
         self.onDestroy && self.onDestroy();
       }, duration * 1000);
+
     },
 
+    /**
+     * Fly the card out or animate back into resting position.
+    */
+    transitionOut: function(e) {
+      var self = this;
+
+      if(this.isUnderThreshold()) {
+        self.onSnapBack(this.x, this.y, this.rotationAngle);
+        return;
+      }
+
+      self.animateFlyAway(e);
+
+    },
     /**
      * Bind drag events on the card.
      */
@@ -223,6 +262,10 @@
     _doDrag: function(e) {
       e.preventDefault();
 
+      if(this.drag === 'false'){
+        return false;
+      }
+
       var o = e.gesture.deltaX / -1000;
 
       this.rotationAngle = Math.atan(o);
@@ -231,7 +274,6 @@
       this.y = this.startY + (e.gesture.deltaY * 0.8);
 
       this.el.style.transform = this.el.style.webkitTransform = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
-
 
       this.thresholdAmount = (this.x / (this.parentWidth/2));
 
@@ -272,6 +314,7 @@
       require: '^tdCards',
       transclude: true,
       scope: {
+        drag: '@',
         onSwipeLeft: '&',
         onSwipeRight: '&',
         onTransitionLeft: '&',
@@ -281,12 +324,20 @@
         onSnapBack: '&',
         onDestroy: '&'
       },
+      controller: ['$scope', '$element', function($scope, $element) {
+        // Removes card
+        $scope.$parent.onClickTransitionOut = function(card) {
+          var element = $scope.$parent.swipeCard;
+          element.onClickTransitionOut();
+          $scope.$emit('removeCard', element, card);
+        }
+      }],
       compile: function(element, attr) {
         return function($scope, $element, $attr, swipeCards) {
           var el = $element[0];
           var leftText = el.querySelector('.no-text');
           var rightText = el.querySelector('.yes-text');
-          
+
           // Force hardware acceleration for animation - better performance on first touch
           el.style.transform = el.style.webkitTransform = 'translate3d(0px, 0px, 0px)';
 
@@ -295,6 +346,7 @@
             el: el,
             leftText: leftText,
             rightText: rightText,
+            drag: $scope.drag,
             onPartialSwipe: function(amt) {
               swipeCards.partial(amt);
               var self = this;
@@ -330,6 +382,7 @@
               });
             },
             onTransitionOut: function(amt) {
+              swipeCards.snapFirstCard();
               if (amt < 0) {
                 swipeableCard.onTransitionLeft();
               } else {
@@ -338,6 +391,12 @@
               $timeout(function() {
                 $scope.onTransitionOut({amt: amt});
               });
+            },
+            onClickTransitionOut: function() {
+              var self = this;
+              self.animateFlyAway();
+
+              swipeCards.partial(1);
             },
             onDestroy: function() {
               $timeout(function() {
@@ -362,7 +421,7 @@
                 frequency: 15,
                 friction: 250,
                 initialForce: false
-              }) 
+              })
 
               .on('step', function(v) {
                 //Have the element spring over 400px
@@ -398,20 +457,22 @@
       scope: {},
       controller: ['$scope', '$element', function($scope, $element) {
         var cards;
-        var firstCard, secondCard, thirdCard;
 
         var existingCards, card;
 
         var i, j;
 
         var sortCards = function() {
+          var top, scale;
           existingCards = $element[0].querySelectorAll('td-card');
 
           for(i = 0; i < existingCards.length; i++) {
             card = existingCards[i];
             if(!card) continue;
             if(i > 0) {
-              card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + (i * 4) + 'px, 0)';
+              top = (i * 25);
+              scale = Math.max(0, (1 - (i / 10)));
+              card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + (i * 25) + 'px, 0) scale('+ scale +')';
             }
             card.style.zIndex = (existingCards.length - i);
           }
@@ -421,22 +482,28 @@
           sortCards();
         });
 
-        var bringCardUp = function(card, amt, max) {
+        var bringCardUp = function(card, amt, max, i) {
           var position, newTop;
           position = card.style.transform || card.style.webkitTransform;
-          newTop = Math.max(0, Math.min(max, max - (max * Math.abs(amt))));
-          card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + newTop + 'px, 0)';
+          newTop = Math.max(max - 25, Math.min(max, max - (max * Math.abs(amt))));
+          newScale = (1 - (Math.max(i - 1, Math.min(i, i - (i * Math.abs(amt)))) / 10));
+          card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + newTop + 'px, 0) scale('+ newScale+')';
         };
 
         this.partial = function(amt) {
           cards = $element[0].querySelectorAll('td-card');
-          firstCard = cards[0];
-          secondCard = cards.length > 2 && cards[1];
-          thirdCard = cards.length > 3 && cards[2];
 
-          secondCard && bringCardUp(secondCard, amt, 4);
-          thirdCard && bringCardUp(thirdCard, amt, 8);
+          var max = Math.min(cards.length, 10);
+          for(var i = 1; i < cards.length; i++){
+            bringCardUp(cards[i], amt, 25 * i, i);
+          }
         };
+
+        this.snapFirstCard = function() {
+          card = $element[0].querySelectorAll('td-card')[1];
+          bringCardUp(card, 0, 0, 0);
+        };
+
       }]
     }
   }])
