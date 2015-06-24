@@ -36,12 +36,16 @@
         <h1 class="title">TD Cards 2</h1>
       </ion-header-bar>
 
-      <div class="row td-title">
-        <div class="col">Master: <span>{{ cards.master.length }}</span></div>
-        <div class="col">Cards: <span>{{ cards.active.length }}</span></div>
-        <div class="col">Discards: <span>{{ cards.discards.length }}</span></div>
-        <div class="col">Liked: <span>{{ cards.liked.length }}</span></div>
-        <div class="col">Disliked: <span>{{ cards.disliked.length }}</span></div>
+      <div class="td-title">
+        <div class="row">
+          <div class="col">Master: <span>{{ cards.master.length }}</span></div>
+          <div class="col">Cards: <span>{{ cards.active.length }}</span></div>
+          <div class="col">Discards: <span>{{ cards.discards.length }}</span></div>
+        </div>
+        <div class="row">
+          <div class="col">Liked: <span>{{ cards.liked.length }}</span></div>
+          <div class="col">Disliked: <span>{{ cards.disliked.length }}</span></div>
+        </div>
       </div>
 
 
