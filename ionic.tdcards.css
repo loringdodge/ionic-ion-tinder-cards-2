@@ -1,7 +1,4 @@
-.background-grey {
-  background-color: #F7F7F7;
-}
-
+/* CORE */
 td-cards {
   display: block;
 }
@@ -14,6 +11,7 @@ td-card {
   height: 300px;
   box-shadow: 0px 1px 10px rgba(0,0,0,0.5);
   border-radius: 3px;
+  background-color: transparent;
 }
 
 td-card img {
@@ -26,7 +24,7 @@ td-card img {
   top: 10px;
   left: 10px;
   font-size: 30px;
-  color: rgb(111, 250, 111);
+  color: #4CAF50;
   opacity: 0;
 }
 
@@ -35,7 +33,7 @@ td-card img {
   top: 10px;
   right: 10px;
   font-size: 30px;
-  color: rgb(255, 115, 115);
+  color: #F44336;
   opacity: 0;
 }
 
@@ -62,9 +60,24 @@ td-card#end-card {
   font-size: 100px;
 }
 
-
 .fade {
   -webkit-transition: 0.2s opacity linear;
   transition: 0.2s opacity linear;
   opacity: 0;
+}
+
+/* DEMO */
+.background-grey {
+  background-color: #F7F7F7;
+}
+
+.td-title {
+  position: absolute;
+  top: 70px;
+  width: 100%;
+  text-align: center;
+}
+
+.td-title span {
+  font-weight: bold;
 }
