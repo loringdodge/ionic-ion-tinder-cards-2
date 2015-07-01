@@ -9,7 +9,7 @@
     <link href="css/style.css" rel="stylesheet">
 
     <!-- tdcards css -->
-    <link rel="stylesheet" href="css/ionic.tdcards.css">
+    <link rel="stylesheet" href="css/ionic.tdcards2.css">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -21,7 +21,7 @@
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
     <!-- tdcards js -->
-    <script src="js/ionic.tdcards.js"></script>
+    <script src="js/ionic.tdcards2.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -56,7 +56,7 @@
       ************************* -->
       <div ng-if="cards.active">
         <td-cards>
-          <td-card ng-repeat="card in cards.active" before-show="sayHello()" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)">
+          <td-card ng-repeat="card in cards.active" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)">
             <div class="image" ng-controller="CardCtrl">
               <div class="no-text"><i class="icon ion-thumbsdown"></i></div>
               <div class="yes-text"><i class="icon ion-thumbsup"></i></div>
