@@ -5,13 +5,13 @@ This is an extension of [Tinder Cards](https://github.com/driftyco/ionic-ion-tin
 which itself was an extension of [Swipe Cards](https://github.com/driftyco/ionic-ion-swipe-cards),
 both created by the driftyco team. The same core directive remains with some additional functionality and a different card layering appearance.
 
-![Screenshot](screenshots/iphone.png)
-
 [Demo](http://codepen.io/loringdodge/pen/BNmRrK)
+
+![Screenshot](screenshots/iphone.png)
 
 ## Install
 
-`bower ionic-tinder-cards-2`
+`bower install ionic-tinder-cards-2`
 
 ## Usage
 
