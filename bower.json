@@ -1,10 +1,14 @@
 {
-  "name": "ionic-ion-tinder-cards-2",
+  "name": "ionic-tinder-cards-2",
   "version": "1.0.0",
   "homepage": "https://github.com/loringdodge/ionic-ion-tinder-cards-2",
   "authors": [
     "Max Lynch <max@drifty.com>",
     "Loring Dodge <loringdodge@gmail.com>"
+  ],
+  "ignore": [
+    "*",
+    "!example/*"
   ],
   "description": "An extension of the tinder-style card UI for Ionic apps",
   "main": [
@@ -22,9 +26,15 @@
     "angular"
   ],
   "license": "MIT",
-  "private": false,
   "dependencies": {
     "collide": "1.0.0-beta.3",
     "ionic": "driftyco/ionic-bower#master"
-  }
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
