@@ -28,8 +28,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "collide": "1.0.0-beta.3",
-    "ionic": "driftyco/ionic-bower#master"
+    "collide": "1.0.0-beta.3"
   },
   "ignore": [
     "**/.*",
