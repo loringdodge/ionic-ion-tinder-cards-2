@@ -205,6 +205,7 @@
         return;
       }
 
+      self.updateIndex();
       self.animateFlyAway(e);
 
     },
@@ -242,6 +243,7 @@
 
     _doDragStart: function(e) {
       e.preventDefault();
+      if(this.el.currentIndex !== 0) return;
       var width = this.el.offsetWidth;
       var point = window.innerWidth / 2 + this.rotationDirection * (width / 2)
       var distance = Math.abs(point - e.gesture.touches[0].pageX);// - window.innerWidth/2);
@@ -252,9 +254,8 @@
     _doDrag: function(e) {
       e.preventDefault();
 
-      if(this.drag === 'false'){
-        return false;
-      }
+      if(this.el.currentIndex !== 0) return;
+      if(this.drag === 'false') return;
 
       var o = e.gesture.deltaX / -1000;
 
@@ -273,6 +274,7 @@
       });
     },
     _doDragEnd: function(e) {
+      if(this.el.currentIndex !== 0) return;
       this.transitionOut(e);
     }
   });
@@ -338,9 +340,11 @@
             leftText: leftText,
             rightText: rightText,
             drag: $scope.drag,
+            updateIndex: function() {
+              swipeCards.updateIndex();
+            },
             beforeShow: function() {
               $timeout(function() {
-                console.log()
                 $scope.beforeShow();
               })
             },
@@ -464,6 +468,8 @@
           for(i = 0; i < existingCards.length; i++) {
 
             card = existingCards[i];
+            card.currentIndex = i;
+
             if(!card) continue;
 
             if(i > 0) {
@@ -522,6 +528,13 @@
           card = $element[0].querySelectorAll('td-card')[1];
           bringCardUp(card, 0, 0, 0);
         };
+
+        this.updateIndex = function() {
+          cards = $element[0].querySelectorAll('td-card');
+          for(var i = 1; i < cards.length; i++){
+            cards[i].currentIndex -= 1;
+          }
+        }
 
       }]
     }
