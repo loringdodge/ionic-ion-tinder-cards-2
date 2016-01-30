@@ -125,7 +125,7 @@
     },
 
     isUnderThreshold: function() {
-      return Math.abs(this.thresholdAmount) < 0.4;
+      return Math.abs(this.thresholdAmount) < this.minThreshold;
     },
 
     /**
@@ -138,6 +138,7 @@
 
       var self = this;
 
+      self.updateIndex();
       self.onTransitionOut(self.thresholdAmount);
 
       // defaults for animation triggered by click
@@ -205,7 +206,6 @@
         return;
       }
 
-      self.updateIndex();
       self.animateFlyAway(e);
 
     },
@@ -307,6 +307,7 @@
       transclude: true,
       scope: {
         drag: '@',
+        minThreshold: '@',
         beforeShow: '&',
         onSwipeLeft: '&',
         onSwipeRight: '&',
@@ -340,6 +341,7 @@
             leftText: leftText,
             rightText: rightText,
             drag: $scope.drag,
+            minThreshold: $scope.minThreshold || 0.4,
             updateIndex: function() {
               swipeCards.updateIndex();
             },

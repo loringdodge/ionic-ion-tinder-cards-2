@@ -71,10 +71,6 @@ angular.module('starter', ['ionic', 'ionic.contrib.ui.tinderCards2'])
     $scope.cards.liked.push(card);
   };
 
-    $scope.sayHello = function() {
-    console.log('Hello');
-  };
-
 })
 
 .controller('CardCtrl', function($scope, TDCardDelegate) {
