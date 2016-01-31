@@ -19,7 +19,7 @@ Include `ionic.tdcards2.js`, `collide.js` and `ionic.tdcards2.css` after the res
 
 ```html
 <td-cards>
-  <td-card ng-repeat="card in cards.active" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)">
+  <td-card ng-repeat="card in cards.active" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)" min-threshold="0.2">
     // Card content here
     <div class="discard" ng-click="onClickTransitionOut(card)">DISCARD</div>
   </td-card>
@@ -107,6 +107,7 @@ To add new cards dynamically, just add them to the cards array:
 | Name                | Scope  | Options    | Action                                                        |
 |---------------------|--------|------------|---------------------------------------------------------------|
 | `drag`              | @      | true/false | Whether the card can be dragged                               |
+| 'minThreshold'      | @      | number     | Vertical threshold the cards will swipe away at (0-1)         |
 | `beforeShow`        | &      | fn         | On creation of card - before being shown on screen            |
 | `onSwipeLeft`       | &      | fn         | On swipping to the left - after onTransitionLeft              |
 | `onSwipeRight`      | &      | fn         | On swipping to the right - after onTransitionRight            |
