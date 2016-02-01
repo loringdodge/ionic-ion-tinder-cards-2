@@ -107,7 +107,7 @@ To add new cards dynamically, just add them to the cards array:
 | Name                | Scope  | Options    | Action                                                        |
 |---------------------|--------|------------|---------------------------------------------------------------|
 | `drag`              | @      | true/false | Whether the card can be dragged                               |
-| 'minThreshold'      | @      | number     | Vertical threshold the cards will swipe away at (0-1)         |
+| `minThreshold`      | @      | number     | Vertical threshold the cards will swipe away at (0-1)         |
 | `beforeShow`        | &      | fn         | On creation of card - before being shown on screen            |
 | `onSwipeLeft`       | &      | fn         | On swipping to the left - after onTransitionLeft              |
 | `onSwipeRight`      | &      | fn         | On swipping to the right - after onTransitionRight            |
