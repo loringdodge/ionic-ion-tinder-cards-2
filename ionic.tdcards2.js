@@ -513,7 +513,8 @@
           var position, newTop;
           position = card.style.transform || card.style.webkitTransform;
           newTop = Math.max(max - 25, Math.min(max, max - (max * Math.abs(amt))));
-          newScale = (1 - (Math.max(i - 1, Math.min(i, i - (i * Math.abs(amt)))) / 10));
+	  // What ever be the case, newScale cannot go negative. 
+          newScale = Math.max(0, (1 - (Math.max(i - 1, Math.min(i, i - (i * Math.abs(amt)))) / 10)));
           card.style.transform = card.style.webkitTransform = 'translate3d(0, ' + newTop + 'px, 0) scale('+ newScale+')';
         };
 
